@@ -1,0 +1,7 @@
+{
+  "name": "crud-mobile-ionic-updated",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
