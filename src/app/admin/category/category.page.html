@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="mainMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Category</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar animated="true"
+    class="ion-margin-bottom"
+    [formControl]="searchField"
+    (keyup.enter)="search()"
+    inputmode="text" placeholder="Search Category data..."></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" [scrollY]="false">
+  <!-- <ion-list>
+    <ion-item *ngFor="let item of categories">
+      <ion-label>{{ item.name }}</ion-label>
+      <ion-buttons slot="end">
+        <ion-button slot="end" fill="clear" color="secondary"
+        (click)="openEditModal(item)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button slot="end" fill="clear" color="danger"
+        (click)="deleteCategory(item.id, item.name)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll (ionInfinite)="setPage($event)"
+  threshold="100px">
+    <ion-infinite-scroll-content loadingSpinner="bubble" loadingText="Loading more data..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
+  <cdk-virtual-scroll-viewport itemSize="56" minBufferPx="900" maxBufferPx="1350"
+  class="ion-content-scroll-host">
+    <ion-list>
+      <ion-item *cdkVirtualFor="let item of categories">
+        <ion-label>{{ item.name }}</ion-label>
+        <ion-buttons slot="end">
+          <ion-button slot="end" fill="clear" color="secondary"
+          (click)="openEditModal(item)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button slot="end" fill="clear" color="danger"
+          (click)="deleteCategory(item.id, item.name)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll (ionInfinite)="setPage($event)"
+    threshold="10px">
+      <ion-infinite-scroll-content loadingSpinner="bubble" loadingText="Loading more data..."></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </cdk-virtual-scroll-viewport>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button id="create-category">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-modal trigger="create-category" #modalCreate>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title slot="start">
+            Create Category
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button [strong]="true" (click)="modalCreate.dismiss()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="createForm">
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="bookmark-outline" size="small"></ion-icon>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input type="text" placeholder="Category Name"
+            formControlName="name"></ion-input>
+            <span slot="error" *ngIf="!createForm.controls.name.valid && createForm.controls.name.dirty">*Name field is required</span>
+          </ion-item>
+          <ion-button expand="full" (click)="submitCreateForm(modalCreate.dismiss())" mode="ios"
+          [disabled]="!createForm.valid">
+            Submit
+          </ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [isOpen]="isModalEditOpened" (didDismiss)="dismissEditModal()" #modalEdit>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title slot="start">
+            Edit Category
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button [strong]="true" (click)="modalEdit.dismiss()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="editForm">
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="bookmark-outline" size="small"></ion-icon>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input type="text" placeholder="Category Name"
+            formControlName="name"></ion-input>
+            <span slot="error" *ngIf="!editForm.controls.name.valid && editForm.controls.name.dirty">
+              *Name field is required
+            </span>
+          </ion-item>
+          <ion-button expand="full" (click)="submitEditForm(modalEdit.dismiss())" mode="ios"
+          [disabled]="!editForm.valid">
+            Submit
+          </ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

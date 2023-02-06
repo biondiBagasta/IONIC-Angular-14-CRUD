@@ -1,0 +1,223 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="mainMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Restock</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar animated="true"
+    class="ion-margin-bottom"
+    [formControl]="searchField"
+    (keyup.enter)="search()"
+    inputmode="text" placeholder="Search Restock data..."></ion-searchbar>
+    <ion-item class="ion-margin-bottom" style="padding-inline-start: 7px; padding-inline-end: 7px;"
+    button="true" (click)="openFilterDateModal()"
+    fill="outline">
+      <ion-icon slot="start" name="calendar-outline" size="small"></ion-icon>
+      <ion-label position="floating">Search by Date</ion-label>
+      <ion-input type="text" placeholder="Search by Date"
+      [formControl]="searchFilterDateField"></ion-input>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <cdk-virtual-scroll-viewport itemSize="56" minBufferPx="900" maxBufferPx="1350">
+    <ion-list>
+      <ion-item *cdkVirtualFor="let item of restocks">
+        <ion-label>{{ item.restock_date | date }}</ion-label>
+        <ion-buttons slot="end">
+          <ion-button slot="end" fill="clear" color="secondary"
+          (click)="openEditModal(item)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button slot="end" fill="clear" color="danger">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+  </cdk-virtual-scroll-viewport>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button id="create-restock">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-modal trigger="create-restock" class="custom-modal" #modalCreate>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title slot="start">
+            Create Restock Data
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button [strong]="true" (click)="modalCreate.dismiss()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="createForm">
+          <ion-item class="ion-margin-bottom" fill="outline" button="true" (click)="openCreateRestockDateModal()">
+            <ion-icon slot="start" name="calendar-outline" size="small"></ion-icon>
+            <ion-label position="floating">Restock Date</ion-label>
+            <ion-input type="text" placeholder="Restock Date"
+            formControlName="restock_date"></ion-input>
+            <!-- <span slot="error" *ngIf="!createForm.controls.restock_date.valid &&
+            createForm.controls.restock_date.dirty">*Restock Date field is required</span> -->
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="bag-handle-outline" size="small"></ion-icon>
+            <ion-label position="floating">Product</ion-label>
+            <ion-select formControlName="product_id" class="regular-select"
+            (ionChange)="enableCreateStock(); updateCreateAmount()">
+              <ion-select-option *ngFor="let product of products"
+              [value]="product.id">
+                {{ product.name }}
+              </ion-select-option>
+            </ion-select>
+            <span slot="error" *ngIf="!createForm.controls.product_id.valid &&
+            createForm.controls.product_id.dirty">*Product field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="business-outline" size="small"></ion-icon>
+            <ion-label position="floating">Supplier</ion-label>
+            <ion-select formControlName="supplier_id" class="regular-select">
+              <ion-select-option *ngFor="let item of suppliers"
+              [value]="item.id">
+                {{ item.name }}
+              </ion-select-option>
+            </ion-select>
+            <span slot="error" *ngIf="!createForm.controls.supplier_id.valid &&
+            createForm.controls.supplier_id.dirty">*Supplier field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="cube-outline" size="small"></ion-icon>
+            <ion-label position="floating">Stock</ion-label>
+            <ion-input type="number" placeholder="Stock" appIntegerInput inputmode="numeric"
+            formControlName="stock" (ionChange)="updateCreateAmount()" [max]="10"></ion-input>
+            <span slot="error" *ngIf="!createForm.controls.stock.valid &&
+            createForm.controls.stock.dirty">*Stock field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="cash-outline" size="small"></ion-icon>
+            <ion-label position="floating">Amount</ion-label>
+            <ion-input type="text" placeholder="Amount" appIntegerInput inputmode="numeric"
+            formControlName="amount"></ion-input>
+            <span slot="error" *ngIf="!createForm.controls.amount.valid &&
+            createForm.controls.amount.dirty">*Amount field is required</span>
+          </ion-item>
+          <ion-button expand="full" (click)="submitCreateForm(modalCreate.dismiss())"
+          [disabled]="!createForm.valid">
+            Submit
+          </ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <ion-modal
+  class="custom-modal"
+  [isOpen]="isModalEditOpened" (didDismiss)="dismissEditModal()" #modalEdit>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title slot="start">
+            Edit Restock Data
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button [strong]="true" (click)="modalEdit.dismiss()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="editForm">
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="bookmark-outline" size="small"></ion-icon>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input type="text" placeholder="Category Name"
+            formControlName="name"></ion-input>
+            <span slot="error" *ngIf="!editForm.controls.name.valid && editForm.controls.name.dirty">
+              *Name field is required
+            </span>
+          </ion-item>
+          <ion-button expand="full" (click)="submitEditForm(modalEdit.dismiss())"
+          [disabled]="!editForm.valid">
+            Submit
+          </ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+
+<ion-modal
+[isOpen]="isOpenFilterDateModal"
+(didDismiss)="closeFilterDateModal()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title slot="start">
+          Search Restock by Date
+        </ion-title>
+        <ion-buttons slot="end">
+          <ion-button [strong]="true" (click)="closeFilterDateModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-datetime [showDefaultTitle]="true"
+      preferWheel="false"
+      presentation="date"
+      [formControl]="startFilterDateField">
+      <span slot="title">Select from date : </span>
+      </ion-datetime>
+      <ion-datetime
+      [showDefaultTitle]="true"
+      preferWheel="false"
+      presentation="date"
+      [formControl]="endFilterDateField">
+      <span slot="title">Select to date : </span>
+      </ion-datetime>
+      <ion-button expand="block" color="tertiary" class="ion-margin-vertical"
+      (click)="selectFilterDate()" [disabled]="startFilterDateField.value == null || endFilterDateField.value == null">
+        Select Date
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<ion-modal
+[isOpen]="isOpenCreateRestockDateModal == true"
+(didDismiss)="closeCreateRestockDateModal()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title slot="start">
+          Create Restock Date
+        </ion-title>
+        <ion-buttons slot="end">
+          <ion-button [strong]="true" (click)="closeCreateRestockDateModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-datetime [showDefaultTitle]="true"
+      preferWheel="false"
+      presentation="date"
+      [formControl]="createRestockDateField"
+      (ionChange)="selectCreateRestockDate()"
+      [showDefaultButtons]="true">
+      <span slot="title">Select Restock Date : </span>
+      </ion-datetime>
+    </ion-content>
+  </ng-template>
+</ion-modal>

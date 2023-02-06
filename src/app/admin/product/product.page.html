@@ -1,0 +1,226 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="mainMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Product</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar animated="true"
+    class="ion-margin-bottom"
+    [formControl]="searchField"
+    (keyup.enter)="search()"
+    inputmode="text" placeholder="Search Product data..."></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+
+  <cdk-virtual-scroll-viewport itemSize="56" minBufferPx="900" maxBufferPx="1350">
+    <ion-list *ngIf="imagesUrl.length != 0">
+      <ion-item-sliding *cdkVirtualFor="let product of products; let i = index">
+        <ion-item-options side="start" (click)="openEditModal(product)">
+          <ion-item-option color="tertiary" expandable>
+            <ion-icon size="large" name="create-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item>
+          <ion-thumbnail slot="start" (click)="openImageModal(i)">
+            <img
+            [lazyLoad]="imagesUrl[i]"
+            [defaultImage]="'./assets/spinner.gif'">
+          </ion-thumbnail>
+          <ion-label>
+            <p class="product-name">{{ product.name }}</p>
+            <p class="price-text">Purchase Price: {{ product.purchase_price | currency : 'Rp. ' }}</p>
+            <p class="price-text">Selling Price: {{ product.selling_price | currency : 'Rp. ' }}</p>
+            <p class="category-text">Stock : {{ product.stock }}</p>
+            <p class="category-text">Category: {{ product.category.name }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options side="end" (click)="deleteProduct(product.id, product.name, product.image)">
+          <ion-item-option color="danger" expandable>
+            <ion-icon name="trash-outline" size="large"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </cdk-virtual-scroll-viewport>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button id="create-product">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-modal trigger="create-product" #modalCreate>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title slot="start">
+            Create Product
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button [strong]="true" (click)="modalCreate.dismiss()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="createForm">
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="bag-handle-outline" size="small"></ion-icon>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input type="text" placeholder="Product Name"
+            formControlName="name"></ion-input>
+            <span slot="error" *ngIf="!createForm.controls.name.valid && createForm.controls.name.dirty">*Name field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="cash-outline" size="small"></ion-icon>
+            <ion-label position="floating">Purchase Price (Rp.)</ion-label>
+            <ion-input type="text"
+            placeholder="Purchase Price" appIntegerInput inputmode="numeric"
+            formControlName="purchase_price"></ion-input>
+            <span slot="error" *ngIf="!createForm.controls.purchase_price.valid &&
+            createForm.controls.purchase_price.dirty">*Purchase Price field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="cash-outline" size="small"></ion-icon>
+            <ion-label position="floating">Selling Price (Rp.)</ion-label>
+            <ion-input type="text" placeholder="Selling Price" appIntegerInput inputmode="numeric"
+            formControlName="selling_price"></ion-input>
+            <span slot="error" *ngIf="!createForm.controls.selling_price.valid &&
+            createForm.controls.selling_price.dirty">*Selling Price field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="cube-outline" size="small"></ion-icon>
+            <ion-label position="floating">Stock</ion-label>
+            <ion-input type="number" placeholder="Stock" appIntegerInput inputmode="numeric"
+            formControlName="stock"></ion-input>
+            <span slot="error" *ngIf="!createForm.controls.stock.valid &&
+            createForm.controls.stock.dirty">*Stock field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="at-outline" size="small"></ion-icon>
+            <ion-label position="floating">Discount</ion-label>
+            <ion-input type="number" placeholder="Discount" appIntegerInput inputmode="numeric"
+            formControlName="discount"></ion-input>
+            <span slot="error" *ngIf="!createForm.controls.discount.valid &&
+            createForm.controls.discount.dirty">*Discount field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="ellipsis-vertical-outline" size="small"></ion-icon>
+            <ion-label position="floating">Category</ion-label>
+            <ion-select interface="popover" formControlName="category_id" class="regular-select">
+              <ion-select-option *ngFor="let category of categories"
+              [value]="category.id">
+                {{ category.name }}
+              </ion-select-option>
+            </ion-select>
+            <span slot="error" *ngIf="!createForm.controls.category_id.valid &&
+            createForm.controls.category_id.dirty">*Category field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" icon="image-outline" size="small"></ion-icon>
+            <ion-label position="stacked">Product Image</ion-label>
+            <ion-input type="file" #file (change)="selectFile($event)" accept="image/*"
+            style="transform: (0, 0);"></ion-input>
+          </ion-item>
+          <ion-button expand="full" (click)="submitCreateForm(modalCreate.dismiss())"
+          [disabled]="!createForm.valid || choosenImage == false">
+            Submit
+          </ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [isOpen]="isImageModalOpened" (didDismiss)="dismissImageModal()"
+  class="image-modal">
+    <ng-template>
+      <img
+      [lazyLoad]="imagesUrl[imageModalIndex]"
+      style="margin: auto;"
+      [defaultImage]="'./assets/spinner.gif'">
+    </ng-template>
+  </ion-modal>
+  <ion-modal trigger="edit-product" #modalEdit [isOpen]="isModalEditOpened == true"
+  (didDismiss)="dismissEditModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title slot="start">
+            Edit Product
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button [strong]="true" (click)="modalEdit.dismiss()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="editForm">
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="bag-handle-outline" size="small"></ion-icon>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input type="text" placeholder="Product Name"
+            formControlName="name"></ion-input>
+            <span slot="error" *ngIf="!editForm.controls.name.valid && editForm.controls.name.dirty">*Name field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="cash-outline" size="small"></ion-icon>
+            <ion-label position="floating">Purchase Price (Rp.)</ion-label>
+            <ion-input type="text" placeholder="Purchase Price" appIntegerInput inputmode="numeric"
+            formControlName="purchase_price"></ion-input>
+            <span slot="error" *ngIf="!editForm.controls.purchase_price.valid &&
+            editForm.controls.purchase_price.dirty">*Purchase Price field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="cash-outline" size="small"></ion-icon>
+            <ion-label position="floating">Selling Price (Rp.)</ion-label>
+            <ion-input type="text" placeholder="Selling Price" appIntegerInput inputmode="numeric"
+            formControlName="selling_price"></ion-input>
+            <span slot="error" *ngIf="!editForm.controls.selling_price.valid &&
+            editForm.controls.selling_price.dirty">*Selling Price field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="cube-outline" size="small"></ion-icon>
+            <ion-label position="floating">Stock</ion-label>
+            <ion-input type="number" placeholder="Stock" appIntegerInput inputmode="numeric"
+            formControlName="stock"></ion-input>
+            <span slot="error" *ngIf="!editForm.controls.stock.valid &&
+            editForm.controls.stock.dirty">*Stock field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="at-outline" size="small"></ion-icon>
+            <ion-label position="floating">Discount</ion-label>
+            <ion-input type="number" placeholder="Discount" appIntegerInput inputmode="numeric"
+            formControlName="discount"></ion-input>
+            <span slot="error" *ngIf="!editForm.controls.discount.valid &&
+            editForm.controls.discount.dirty">*Discount field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" name="ellipsis-vertical-outline" size="small"></ion-icon>
+            <ion-label position="floating">Category</ion-label>
+            <ion-select interface="popover" formControlName="category_id" class="regular-select">
+              <ion-select-option *ngFor="let category of categories"
+              [value]="category.id">
+                {{ category.name }}
+              </ion-select-option>
+            </ion-select>
+            <span slot="error" *ngIf="!editForm.controls.category_id.valid &&
+            editForm.controls.category_id.dirty">*Category field is required</span>
+          </ion-item>
+          <ion-item class="ion-margin-bottom" fill="outline">
+            <ion-icon slot="start" icon="image-outline" size="small"></ion-icon>
+            <ion-label position="stacked">Product Image</ion-label>
+            <ion-input type="file" #file (change)="selectFile($event)" accept="image/*"
+            style="transform: (0, 0);"></ion-input>
+          </ion-item>
+          <ion-button expand="full" (click)="submitEditForm(modalEdit.dismiss())"
+          [disabled]="!editForm.valid">
+            Submit
+          </ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

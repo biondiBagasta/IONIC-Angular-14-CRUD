@@ -1,0 +1,47 @@
+.custom-input {
+  --background: rgba(236, 240, 241, 0.1);
+  --border-color: #546de5;
+  --color-focused: #546de5;
+}
+
+.custom-label {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+
+ion-modal {
+  --height: 90%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  padding: 10px;
+}
+
+ion-modal::part(backdrop) {
+  background: rgba(209, 213, 219);
+  opacity: 1;
+}
+
+ion-modal ion-toolbar {
+  --background: #0A3D62;
+  --color: white;
+}
+
+cdk-virtual-scroll-viewport {
+  height: 100%;
+  width: 100%;
+}
+
+.product-name {
+  font-weight: 500;
+}
+
+.price-text {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.category-text {
+  font-weight: 500;
+  font-size: 12px;
+}

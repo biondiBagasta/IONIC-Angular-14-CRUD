@@ -1,0 +1,29 @@
+<ion-content [fullscreen]="true" class="custom-bg">
+  <div style="margin-top: 10%;" class="ion-padding">
+    <div class="image-container">
+      <ion-img src="https://res.cloudinary.com/bion/image/upload/v1656129087/CRUD-MOBILE/icons/cashier_nqa8ft.png"></ion-img>
+    </div>
+    <div style="height: 2vh;"></div>
+    <form [formGroup]="loginForm">
+      <ion-item fill="outline" class="custom-input ion-margin-bottom">
+        <ion-icon slot="start" name="mail-outline" size="small"></ion-icon>
+        <ion-label position="floating">Username / Email</ion-label>
+        <ion-input class="regular-input" formControlName="userCredentials"></ion-input>
+        <span slot="error" *ngIf="!loginForm.controls.userCredentials.valid && loginForm.controls.userCredentials.dirty">
+          *Field Username / Email harus diisi.
+        </span>
+      </ion-item>
+      <ion-item fill="outline" class="custom-input ion-margin-bottom">
+        <ion-icon slot="start" name="lock-open-outline" size="small"></ion-icon>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input class="regular-input" formControlName="password" type="password"></ion-input>
+        <span slot="error" *ngIf="!loginForm.controls.password.valid && loginForm.controls.password.dirty">
+          *Field Password harus diisi.
+        </span>
+      </ion-item>
+    </form>
+    <ion-button expand="block" class="ion-margin-top" (click)="login()">
+      Submit
+    </ion-button>
+  </div>
+</ion-content>

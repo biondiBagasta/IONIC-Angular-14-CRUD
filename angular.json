@@ -28,9 +28,14 @@
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/leaflet/dist/images",
+                "output": "./assets/"
               }
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss"],
+            "styles": ["src/theme/variables.scss", "src/global.scss", "node_modules/leaflet/dist/leaflet.css"],
             "scripts": [],
             "aot": false,
             "vendorChunk": true,
@@ -148,7 +153,8 @@
   "cli": {
     "schematicCollections": [
       "@ionic/angular-toolkit"
-    ]
+    ],
+    "analytics": "4dd4c892-67b3-4e19-b061-a8f0e8568432"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {

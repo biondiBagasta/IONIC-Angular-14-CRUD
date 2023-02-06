@@ -1,0 +1,45 @@
+.header-menu {
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='300' height='200' preserveAspectRatio='none' viewBox='0 0 300 200'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1005%26quot%3b)' fill='none'%3e%3crect width='300' height='200' x='0' y='0' fill='rgba(10%2c 61%2c 98%2c 1)'%3e%3c/rect%3e%3cpath d='M0%2c120.935C24.18%2c124.089%2c51.708%2c125.36%2c70.879%2c110.29C89.858%2c95.371%2c86.528%2c66.039%2c97.313%2c44.441C108.649%2c21.739%2c134.08%2c5.814%2c135.692%2c-19.51C137.382%2c-46.058%2c125.357%2c-73.604%2c105.987%2c-91.838C87.196%2c-109.527%2c59.216%2c-110.492%2c33.873%2c-115.361C10.859%2c-119.783%2c-12.69%2c-126.343%2c-34.915%2c-118.911C-56.791%2c-111.595%2c-69.856%2c-90.899%2c-86.629%2c-75.064C-105.519%2c-57.23%2c-131.175%2c-44.645%2c-139.606%2c-20.072C-148.569%2c6.052%2c-149.15%2c38.267%2c-133.261%2c60.858C-117.569%2c83.168%2c-84.78%2c82.019%2c-59.914%2c93.229C-39.44%2c102.459%2c-22.269%2c118.03%2c0%2c120.935' fill='%2308314e'%3e%3c/path%3e%3cpath d='M300 326.304C324.646 327.089 349.628 322.827 370.573 309.81399999999996 391.693 296.692 409.874 277.279 417.165 253.507 424.115 230.849 412.949 207.699 409.065 184.319 405.28 161.536 405.533 138.356 394.651 117.985 381.836 93.994 367.696 65.989 341.657 58.129999999999995 315.611 50.269000000000005 287.355 64.106 264.373 78.666 244.68099999999998 91.141 238.188 115.595 223.01600000000002 133.293 207.957 150.86 180.10899999999998 159.415 175.68200000000002 182.126 171.258 204.823 191.575 224.094 201.22 245.111 210.84300000000002 266.081 214.434 290.758 232.25799999999998 305.409 250.891 320.724 275.89300000000003 325.536 300 326.304' fill='%230c4976'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1005'%3e%3crect width='300' height='200' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
+}
+
+.profile-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+
+ion-avatar {
+  border: 4px solid #ecf0f1;
+  width: 64px;
+  height: 64px;
+}
+
+.person-name {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ecf0f1;
+}
+
+.role-text {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #ecf0f1;
+}
+
+.active-item {
+  --background: #0a3d62;
+  --color: #ffffff;
+
+  ion-icon {
+    color: #ffffff;
+  }
+}

@@ -1,0 +1,55 @@
+<ion-menu side="start" menuId="mainMenu" contentId="main">
+  <ion-content>
+    <div class="header-menu ion-padding">
+      <div class="profile-container">
+        <ion-avatar>
+          <ion-img [src]="user.photo"></ion-img>
+        </ion-avatar>
+        <ion-icon name="settings-outline" color="light" style="font-size: 24px;">
+
+        </ion-icon>
+      </div>
+      <div class="person-name ion-margin-top">
+        {{ user.full_name }}
+      </div>
+      <div class="role-text">
+        {{ user.role }}
+      </div>
+    </div>
+    <ion-menu-toggle>
+      <ion-list class="menu-items">
+        <ion-item routerLinkActive="active-item"
+        routerLink="/admin/dashboard">
+          <ion-icon name="speedometer-outline" slot="start"></ion-icon>
+          <ion-label>Dashboard</ion-label>
+        </ion-item>
+        <ion-item routerLink="/admin/category" routerLinkActive="active-item">
+          <ion-icon name="list-outline" slot="start"></ion-icon>
+          <ion-label>Category</ion-label>
+        </ion-item>
+        <ion-item routerLinkActive="active-item"
+        routerLink="/admin/supplier">
+          <ion-icon name="business-outline" slot="start"></ion-icon>
+          <ion-label>Supplier</ion-label>
+        </ion-item>
+        <ion-item routerLink="/admin/product" routerLinkActive="active-item">
+          <ion-icon name="bag-handle-outline" slot="start"></ion-icon>
+          <ion-label>Product</ion-label>
+        </ion-item>
+        <ion-item routerLink="/admin/restock" routerLinkActive="active-item">
+          <ion-icon name="reload-outline" slot="start"></ion-icon>
+          <ion-label>Restock</ion-label>
+        </ion-item>
+        <ion-item routerLink="/admin/qrcode" routerLinkActive="active-item">
+          <ion-icon name="qr-code-outline" slot="start"></ion-icon>
+          <ion-label>QRCode</ion-label>
+        </ion-item>
+        <ion-item routerLink="/admin/earthquake" routerLinkActive="active-item">
+          <ion-icon name="earth-outline" slot="start"></ion-icon>
+          <ion-label>Earthquake</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-menu-toggle>
+  </ion-content>
+</ion-menu>
+<ion-router-outlet id="main"></ion-router-outlet>
